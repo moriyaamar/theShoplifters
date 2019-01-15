@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">iList</string>
+    <string name="add_list">Add New List</string>
+    <string name="add_item">Edit Exist List</string>
+
+
+</resources>
