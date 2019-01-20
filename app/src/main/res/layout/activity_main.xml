@@ -7,43 +7,67 @@
     tools:context=".MainActivity"
     android:background="@drawable/background_icon">
 
-    <Button
-        android:id="@+id/addListBtn"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="55dp"
-        android:text="@string/add_list" />
-
-    <Button
-        android:id="@+id/editListBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/addListBtn"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="-3dp"
-        android:layout_marginEnd="40dp"
-        android:text="@string/add_item" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="126dp"
-        android:layout_height="184dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="54dp"
-        android:layout_marginTop="102dp"
-        app:srcCompat="@drawable/add_list" />
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="135dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="126dp"
-        android:layout_height="184dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="103dp"
-        android:layout_marginEnd="41dp"
-        app:srcCompat="@drawable/edit_list" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="9">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="3"
+                app:srcCompat="@drawable/add_list" />
+
+            <Button
+                android:id="@+id/addListBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/imageView7"
+                android:layout_alignParentStart="true"
+                android:layout_weight="6"
+                android:text="@string/add_list" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="9">
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="3"
+                app:srcCompat="@drawable/edit_list" />
+
+            <Button
+                android:id="@+id/editListBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/addListBtn"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="6"
+                android:text="@string/add_item" />
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
