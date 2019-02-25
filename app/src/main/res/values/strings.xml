@@ -2,6 +2,8 @@
     <string name="app_name">iList</string>
     <string name="add_list">Add New List</string>
     <string name="add_item">Edit Exist List</string>
+    <string name="item_amount">Amount</string>
+    <string name="item_name">Item name</string>
 
 
 </resources>

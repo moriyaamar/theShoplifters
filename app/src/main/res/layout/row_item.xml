@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="78dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <CheckBox
+            android:id="@+id/itemCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="43" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:text="@string/item_name"
+            android:textSize="60px"
+            android:gravity="left|center"/>
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="35"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@string/item_amount" />
+
+        <!--   <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_weight="25"
+               android:orientation="horizontal"
+               android:weightSum="100">
+
+               <ImageView
+                   android:id="@+id/imageView"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="42"
+                   app:srcCompat="@drawable/minus-gross-horizontal-straight-line-symbol" />
+
+               <EditText
+                   android:id="@+id/editText3"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="35"
+                   android:ems="10"
+                   android:inputType="textPersonName"
+                   android:text="Name" />
+
+               <ImageView
+                   android:id="@+id/imageView2"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="42"
+                   app:srcCompat="@drawable/addition-sign"
+                   android:layout_gravity="center|left"/>
+           </LinearLayout>-->
+
+    </LinearLayout>
+</RelativeLayout>
