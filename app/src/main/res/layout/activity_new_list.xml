@@ -3,13 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
     android:background="@drawable/back2">
 
-
-    <ListView
-        android:id="@+id/basketListView"
+   <!--<fragment
+        android:id="@+id/basketFragment"
+        android:tag="FRAG_BASKET"
+        android:name="com.example.moriyaamar.project.FragNewList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />-->
+
+   <ListView
+       android:id="@+id/basketListView"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" />
 </RelativeLayout>

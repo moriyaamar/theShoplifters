@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
 
     <LinearLayout
@@ -36,39 +37,8 @@
             android:layout_weight="35"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/item_amount" />
-
-        <!--   <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_weight="25"
-               android:orientation="horizontal"
-               android:weightSum="100">
-
-               <ImageView
-                   android:id="@+id/imageView"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:layout_weight="42"
-                   app:srcCompat="@drawable/minus-gross-horizontal-straight-line-symbol" />
-
-               <EditText
-                   android:id="@+id/editText3"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:layout_weight="35"
-                   android:ems="10"
-                   android:inputType="textPersonName"
-                   android:text="Name" />
-
-               <ImageView
-                   android:id="@+id/imageView2"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:layout_weight="42"
-                   app:srcCompat="@drawable/addition-sign"
-                   android:layout_gravity="center|left"/>
-           </LinearLayout>-->
+            android:text="@string/item_amount"
+            android:gravity="center"/>
 
     </LinearLayout>
 </RelativeLayout>
