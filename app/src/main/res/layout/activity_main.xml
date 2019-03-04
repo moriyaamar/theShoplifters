@@ -69,7 +69,7 @@
                 android:layout_alignTop="@+id/addListBtn"
                 android:layout_alignParentEnd="true"
                 android:layout_weight="6"
-                android:text="@string/add_item" />
+                android:text="@string/edit_list" />
         </LinearLayout>
     </LinearLayout>
 

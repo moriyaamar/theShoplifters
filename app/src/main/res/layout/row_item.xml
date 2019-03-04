@@ -21,16 +21,16 @@
             android:layout_weight="43" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/itemNameTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="20"
+            android:gravity="left|center"
             android:text="@string/item_name"
-            android:textSize="60px"
-            android:gravity="left|center"/>
+            android:textSize="60px" />
 
         <EditText
-            android:id="@+id/editText4"
+            android:id="@+id/itemAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="35"

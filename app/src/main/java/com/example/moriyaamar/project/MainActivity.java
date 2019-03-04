@@ -23,10 +23,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, FragNewListNameDialog.ListNameListener {
     private Button newListBtn, editListBtn;
-    private String newListName;
     private String uniqueId;
     private final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE=1;
     private DatabaseReference appDatabase;
+    private static final String FIREBASE_URL = "https://ilistproject.firebaseio.com/";              //??????
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //User already exits
                 } else {
                     appDatabase.child("users").child(uniqueId).setValue("Grinch");      //Change Grinch to username requested from user
+                    appDatabase.child("lists").setValue(uniqueId);
                 }
             }
 
@@ -82,14 +83,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onListNameApproved(String name) {
-        this.newListName = name;
-
-        ///////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////ENTER NEW LIST TO DATABASE HERE//////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////
 
         Intent myIntent = new Intent(MainActivity.this, NewListActivity.class);
-        myIntent.putExtra("listName", newListName);       //pass ListName
+        myIntent.putExtra("LIST_NAME", name);       //pass ListName
+        myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);
+        myIntent.putExtra("UID", uniqueId);
         MainActivity.this.startActivity(myIntent);              /*Load new list activity here*/
     }
 
