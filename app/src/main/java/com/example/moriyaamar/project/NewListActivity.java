@@ -1,18 +1,23 @@
 package com.example.moriyaamar.project;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,13 +26,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class NewListActivity extends AppCompatActivity implements FragAddNewItemDialog.NewItemListener, FragNewList.OnFragmentInteractionListener {
+public class NewListActivity extends AppCompatActivity implements FragAddNewItemDialog.NewItemListener {
     private ShopList currentList;
     private DatabaseReference appDatabase;
     private String uid;
     private static final String LISTS = "lists";
     private ArrayList<Item> basket;
     private ItemAdapter itemAdapter;
+    private int currentPosition=-1;
+    private int currentMenu=0;              //0 - add item menu , 1 - trash menu
+    private boolean longClickIndicator=false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,17 +47,11 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
         String firebaseUrl = mainIntent.getStringExtra("FIREBASE_URL");
         uid = mainIntent.getStringExtra("UID");
 
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(R.id.basketFragment, new FragNewList()).addToBackStack(null).commit();
         currentList = new ShopList(listName);
 
         basket = currentList.getShoppingList();
 
- /*       basket.add(new Item("Cola",3));
-        basket.add(new Item("Bamba",2));
-        basket.add(new Item("Cake",1));*/
-
-        ListView list = (ListView)findViewById(R.id.basketListView);
+        ListView list = findViewById(R.id.basketListView);
         itemAdapter = new ItemAdapter(getApplicationContext(), R.layout.row_item, basket);
         itemAdapter.setNotifyOnChange(true);
         list.setAdapter(itemAdapter);
@@ -80,22 +82,69 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
             }
         });
 
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                currentPosition=position;
+                longClickIndicator=!longClickIndicator;
+
+                if(longClickIndicator) {
+                    view.setSelected(true);
+                    currentMenu = 1;
+                    invalidateOptionsMenu();
+                }
+                else {
+                    view.setSelected(false);
+                    currentMenu = 0;
+                    invalidateOptionsMenu();
+                }
+                return true;
+            }
+        });
+
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem plusItem = menu.findItem(R.id.plusMenuItem);
+        MenuItem trashItem = menu.findItem(R.id.trashMenuItem);
+
+        if(currentMenu==0) {
+            plusItem.setEnabled(true).setVisible(true);
+            trashItem.setEnabled(false).setVisible(false);
+        }
+        else{
+            plusItem.setEnabled(false).setVisible(false);
+            trashItem.setEnabled(true).setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.add_item_menu, menu);
+        inflater.inflate(R.menu.new_list_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.addMenuItem:
+            case R.id.plusMenuItem:
                 new FragAddNewItemDialog().show(getSupportFragmentManager(),null);
+                return true;
+            case R.id.trashMenuItem:
+                String itemname = basket.get(currentPosition).getItemName();
+                basket.remove(currentPosition);
+                itemAdapter.notifyDataSetChanged();
+                appDatabase.child(LISTS).child(uid).child(currentList.getListName()).child(itemname).removeValue();
+                currentMenu=0;
+                invalidateOptionsMenu();
+                Toast.makeText(getApplicationContext(), "Item was deleted successfully", Toast.LENGTH_SHORT).show();
+               return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -109,12 +158,34 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
 
         currentList.setItemInShoppingList(newItem);
 
+        //////////////////////////////////////////////////////////////
+        ////////////////CHECK IF ITEM ALREADY EXISTS//////////////////
+        //////////////////////////////////////////////////////////////
+
         appDatabase.child(LISTS).child(uid).child(currentList.getListName()).child(newItem.getItemName()).setValue(newItem.getAmount());        //insert item to database
 
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
+    public void removeItemFromList(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("Delete Item").setMessage("Are you sure you want to delete this item?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        basket.remove(currentPosition);
+                        appDatabase.child(LISTS).child(uid).child(currentList.getListName()).removeValue();
+                        currentMenu=0;
+                        invalidateOptionsMenu();
+                        Toast.makeText(getApplicationContext(), "Item was deleted successfully", Toast.LENGTH_SHORT).show();
+                    }
+
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });        //ask if you sure you want to delete item - currently not working****
+
+        builder.create();
     }
 }

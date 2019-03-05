@@ -1,10 +1,13 @@
 package com.example.moriyaamar.project;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
     private final Context context;
     private final ArrayList<Item> shopList;
+    private TextView itemNameTextView;
 
 
 
@@ -25,9 +29,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
     @Override
     public View getView(int position, final View convertView, final ViewGroup parent) {
-        //return super.getView(position, convertView, parent);
 
-//        Item currentItem = getItem(position);
         View rowView = convertView;
 
         if(rowView==null){
@@ -35,10 +37,21 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             rowView = inflater.inflate(R.layout.row_item, parent, false);
         }
 
-        TextView itemNameTextView = (TextView)rowView.findViewById(R.id.itemNameTextView);
+        itemNameTextView = (TextView)rowView.findViewById(R.id.itemNameTextView);
         TextView itemAmountTextView = (TextView)rowView.findViewById(R.id.itemAmountTextView);
+        CheckBox itemCheckBox = (CheckBox)rowView.findViewById(R.id.itemCheckBox);
 
-       // Item currentItem = this.shopList.get(position);
+        itemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {                      //Maybe these should be placed in "Go Shopping" activity or maybe "edit list"
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    itemNameTextView.setPaintFlags(itemNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                else
+                    itemNameTextView.setPaintFlags(itemNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            }
+        });
+
+
         itemNameTextView.setText(shopList.get(position).getItemName());
         itemAmountTextView.setText(Integer.toString(shopList.get(position).getAmount()));
 

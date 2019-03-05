@@ -33,6 +33,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:hint="@string/new_item_amount" />
+            android:hint="@string/new_item_amount"
+            android:gravity="center"/>
     </LinearLayout>
 </RelativeLayout>
