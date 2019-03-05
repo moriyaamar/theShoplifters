@@ -1,6 +1,7 @@
 package com.example.moriyaamar.project;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,11 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
     private final Context context;
     private final ArrayList<Item> shopList;
-    private TextView itemNameTextView;
+//    private TextView itemNameTextView;
 
 
 
-    public ItemAdapter(Context context, int resource, ArrayList<Item> values) {
+    public ItemAdapter(@NonNull Context context, int resource, ArrayList<Item> values) {
         super(context, resource);
 
         this.context = context;
@@ -37,7 +38,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             rowView = inflater.inflate(R.layout.row_item, parent, false);
         }
 
-        itemNameTextView = (TextView)rowView.findViewById(R.id.itemNameTextView);
+        final TextView itemNameTextView = (TextView)rowView.findViewById(R.id.itemNameTextView);
         TextView itemAmountTextView = (TextView)rowView.findViewById(R.id.itemAmountTextView);
         CheckBox itemCheckBox = (CheckBox)rowView.findViewById(R.id.itemCheckBox);
 

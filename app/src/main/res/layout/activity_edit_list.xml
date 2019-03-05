@@ -7,4 +7,8 @@
     tools:context=".EditListActivity"
     android:background="@drawable/back2">
 
+    <ListView
+        android:id="@+id/listOfListsListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

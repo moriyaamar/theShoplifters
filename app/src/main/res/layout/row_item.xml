@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_weight="35"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:text="@string/item_amount"
             android:gravity="center"/>
 

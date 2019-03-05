@@ -1,14 +1,11 @@
 package com.example.moriyaamar.project;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,22 +39,49 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_list);
 
+        appDatabase = FirebaseDatabase.getInstance().getReference();
         Intent mainIntent = getIntent();                                        //get all data from previous activity
-        final String listName = mainIntent.getStringExtra("LIST_NAME");
-        String firebaseUrl = mainIntent.getStringExtra("FIREBASE_URL");
-        uid = mainIntent.getStringExtra("UID");
+        final String listName = mainIntent.getExtras().getString("LIST_NAME");
+//        String firebaseUrl = mainIntent.getExtras().getString("FIREBASE_URL");
+        uid = mainIntent.getExtras().getString("UID");
 
-        currentList = new ShopList(listName);
+        boolean state=true;
+        state = mainIntent.getExtras().getBoolean("STATE");     //check if new or old list
 
-        basket = currentList.getShoppingList();
+        if(state) {
+            currentList = new ShopList(listName);
+            basket = currentList.getShoppingList();
+        }
+        else {
+            currentList = new ShopList(listName);
+            basket = currentList.getShoppingList();
+            appDatabase.child(LISTS).child(uid).child(listName).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
+                        String itemName = uniqueKeySnapshot.getKey();
+                        int itemAmount = Integer.parseInt(uniqueKeySnapshot.getValue().toString());
+                        Item i = new Item(itemName, itemAmount);
+                        basket.add(i);
+                        itemAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         ListView list = findViewById(R.id.basketListView);
         itemAdapter = new ItemAdapter(getApplicationContext(), R.layout.row_item, basket);
         itemAdapter.setNotifyOnChange(true);
         list.setAdapter(itemAdapter);
 
-        appDatabase = FirebaseDatabase.getInstance().getReference();
-        appDatabase.child(LISTS).child(uid).child(listName).push().setValue("-1");
+        if(state) {
+            appDatabase.child(LISTS).child(uid).child(listName).push().setValue("-1");
+        }
 
         appDatabase.child(LISTS).child(uid).child(listName).addValueEventListener(new ValueEventListener() {        //update the shopping list every time
             @Override
@@ -109,14 +133,17 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
 
         MenuItem plusItem = menu.findItem(R.id.plusMenuItem);
         MenuItem trashItem = menu.findItem(R.id.trashMenuItem);
+        MenuItem shareItem = menu.findItem(R.id.shareMenuItem);
 
         if(currentMenu==0) {
             plusItem.setEnabled(true).setVisible(true);
             trashItem.setEnabled(false).setVisible(false);
+            shareItem.setEnabled(false).setVisible(false);
         }
         else{
             plusItem.setEnabled(false).setVisible(false);
             trashItem.setEnabled(true).setVisible(true);
+            shareItem.setEnabled(false).setVisible(false);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -126,7 +153,7 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.new_list_menu, menu);
+        inflater.inflate(R.menu.list_menu, menu);
         return true;
     }
 

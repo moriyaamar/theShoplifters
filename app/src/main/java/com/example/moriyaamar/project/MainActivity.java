@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String uniqueId;
     private final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE=1;
     private DatabaseReference appDatabase;
-    private static final String FIREBASE_URL = "https://ilistproject.firebaseio.com/";              //??????
+    private static final String FIREBASE_URL = "https://ilistproject.firebaseio.com/", LISTS = "lists";              //necessary?
+    private boolean newList=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //User already exits
                 } else {
                     appDatabase.child("users").child(uniqueId).setValue("Grinch");      //Change Grinch to username requested from user
-                    appDatabase.child("lists").setValue(uniqueId);
+                    appDatabase.child(LISTS).setValue(uniqueId);
                 }
             }
 
@@ -77,14 +79,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        newList = false;
         Intent myIntent = new Intent(MainActivity.this, EditListActivity.class);
+        myIntent.putExtra("UID", uniqueId);
         MainActivity.this.startActivity(myIntent);              /*Load edit list activity here*/
     }
 
     @Override
-    public void onListNameApproved(String name) {
+    public void onListNameApproved(final String name) {
 
-        Intent myIntent = new Intent(MainActivity.this, NewListActivity.class);
+        appDatabase.child(LISTS).child(uniqueId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.hasChild(name)){
+                    Intent myIntent = new Intent(MainActivity.this, NewListActivity.class);
+                    myIntent.putExtra("LIST_NAME", name);       //pass ListName
+                    myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);
+                    myIntent.putExtra("UID", uniqueId);
+                    myIntent.putExtra("STATE", newList);
+                    MainActivity.this.startActivity(myIntent);              /*Load new list activity here*/
+                }
+                else
+                    Toast.makeText(getApplicationContext(), "Another list with the same name already exists",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+ /*       Intent myIntent = new Intent(MainActivity.this, NewListActivity.class);
         myIntent.putExtra("LIST_NAME", name);       //pass ListName
         myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);
         myIntent.putExtra("UID", uniqueId);

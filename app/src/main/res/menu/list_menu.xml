@@ -13,5 +13,10 @@
         android:title="@string/add_item"
         android:icon="@mipmap/ic_trash"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/shareMenuItem"
+        android:title="@string/shareitem"
+        android:icon="@drawable/ic_share_white_24dp"
+        app:showAsAction="always"/>
 
 </menu>
