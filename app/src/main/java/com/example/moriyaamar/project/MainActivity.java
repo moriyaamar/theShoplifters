@@ -3,7 +3,10 @@ package com.example.moriyaamar.project;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,33 +29,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button newListBtn, editListBtn;
     private String uniqueId;
     private final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE=1;
+    private final int MY_PERMISSIONS_REQUEST_READ_SMS=2;
     private DatabaseReference appDatabase;
     private static final String FIREBASE_URL = "https://ilistproject.firebaseio.com/", LISTS = "lists";              //necessary?
-    private boolean newList=true;
+    private int state=1;
+    private SmsBroadcastReceiver smsReceiver;
+    private IntentFilter smsFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        smsFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);              //Prepare IntentFilter for the SMS BroadcastReceiver
+        smsFilter.addAction(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);                     //
+        smsFilter.setPriority(999);                                                         //
+
         appDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){
-            Context AppContext = getApplicationContext();
-            TelephonyManager tMgr = (TelephonyManager) AppContext.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED){       //Check app permissions
+            Context AppContext = getApplicationContext();                                                                                                   //
+            TelephonyManager tMgr = (TelephonyManager) AppContext.getSystemService(Context.TELEPHONY_SERVICE);                                              //
             uniqueId = tMgr.getDeviceId();
+            smsReceiver = new SmsBroadcastReceiver(uniqueId);                                           //Creating new BroadcastReceiver
         }
         else
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);      //No permissions found, request permissions
 
-        appDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS)!=PackageManager.PERMISSION_DENIED)                     //Check other app permissions
+            this.registerReceiver(smsReceiver, smsFilter);                                                                                                   //Register the BroadcastReceiver if permissions granted
+        else
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_SMS}, MY_PERMISSIONS_REQUEST_READ_SMS);        //No permissions found, request permissions
+
+            appDatabase.child("users").child(uniqueId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     //User already exits
                 } else {
-                    appDatabase.child("users").child(uniqueId).setValue("Grinch");      //Change Grinch to username requested from user
-                    appDatabase.child(LISTS).setValue(uniqueId);
+                    appDatabase.child("users").child(uniqueId).setValue("Grinch");      //Change Grinch to username requested from user - Optional, not critical
                 }
             }
 
@@ -79,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        newList = false;
+        state = 2;
         Intent myIntent = new Intent(MainActivity.this, EditListActivity.class);
         myIntent.putExtra("UID", uniqueId);
         MainActivity.this.startActivity(myIntent);              /*Load edit list activity here*/
@@ -96,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     myIntent.putExtra("LIST_NAME", name);       //pass ListName
                     myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);
                     myIntent.putExtra("UID", uniqueId);
-                    myIntent.putExtra("STATE", newList);
+                    myIntent.putExtra("STATE", state);
                     MainActivity.this.startActivity(myIntent);              /*Load new list activity here*/
                 }
                 else
@@ -109,11 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
- /*       Intent myIntent = new Intent(MainActivity.this, NewListActivity.class);
-        myIntent.putExtra("LIST_NAME", name);       //pass ListName
-        myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);
-        myIntent.putExtra("UID", uniqueId);
-        MainActivity.this.startActivity(myIntent);              /*Load new list activity here*/
     }
 
     /**Check permission in order to obtain unique user ID*/
@@ -126,7 +137,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Context AppContext = getApplicationContext();
                     TelephonyManager tMgr = (TelephonyManager)AppContext.getSystemService(Context.TELEPHONY_SERVICE);
                     uniqueId = tMgr.getDeviceId();
+                    smsReceiver = new SmsBroadcastReceiver(uniqueId);                                           //Creating new BroadcastReceiver
                 }
+                break;
+            case MY_PERMISSIONS_REQUEST_READ_SMS:
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    this.registerReceiver(smsReceiver, smsFilter);
+                }
+                break;
         }
     }
 }

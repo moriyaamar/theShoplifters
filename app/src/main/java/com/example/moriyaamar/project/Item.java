@@ -1,8 +1,9 @@
 package com.example.moriyaamar.project;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Item {
+public class Item implements Serializable {
     private String itemName;
     private int amount;
 

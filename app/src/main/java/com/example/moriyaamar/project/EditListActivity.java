@@ -33,7 +33,7 @@ public class EditListActivity extends AppCompatActivity {
     private int currentMenu = 0, currentPosition;            //0 - show nothing, 1 - show share option
     private boolean longClickIndicator=false;
     private ShopList shopList;
-    private boolean state = false;
+    private final int state = 2;
  //   private Bundle listName;
 
     @Override

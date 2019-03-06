@@ -1,16 +1,13 @@
 <resources>
     <string name="app_name">iList</string>
     <string name="add_list">Add New List</string>
-    <string name="edit_list">Edit Exist List</string>
+    <string name="edit_list">Edit Lists</string>
     <string name="item_amount">Amount</string>
     <string name="item_name">Item name</string>
     <string name="add_item">add item</string>
     <string name="menuSettings">Settings</string>
     <string name="new_item_name">Item</string>
     <string name="new_item_amount">Amount</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="shareitem">shareItem</string>
 
 

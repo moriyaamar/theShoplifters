@@ -42,17 +42,16 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
         appDatabase = FirebaseDatabase.getInstance().getReference();
         Intent mainIntent = getIntent();                                        //get all data from previous activity
         final String listName = mainIntent.getExtras().getString("LIST_NAME");
-//        String firebaseUrl = mainIntent.getExtras().getString("FIREBASE_URL");
         uid = mainIntent.getExtras().getString("UID");
 
-        boolean state=true;
-        state = mainIntent.getExtras().getBoolean("STATE");     //check if new or old list
+        int state=1;                    //1 - new empty list, 2 - exist list, 3 - list from BroadcastReceiver
+        state = mainIntent.getExtras().getInt("STATE");     //check if new or old list
 
-        if(state) {
+        if(state==1) {
             currentList = new ShopList(listName);
             basket = currentList.getShoppingList();
         }
-        else {
+        else if(state==2){
             currentList = new ShopList(listName);
             basket = currentList.getShoppingList();
             appDatabase.child(LISTS).child(uid).child(listName).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -74,12 +73,26 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
             });
         }
 
+        else if(state==3){
+            ArrayList<Item> shoppingList = (ArrayList<Item>) mainIntent.getExtras().getSerializable("LIST");
+            System.out.println(listName+" "+uid);
+            appDatabase.child(LISTS).child(uid).child(listName).push().setValue("-1");
+            for(Item i:shoppingList){
+                appDatabase.child(LISTS).child(uid).child(listName).child(i.getItemName()).setValue(i.getAmount());
+            }
+
+            basket = shoppingList;
+            /////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////CREATE NEW LIST IN DATABASE/////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////
+        }
+
         ListView list = findViewById(R.id.basketListView);
         itemAdapter = new ItemAdapter(getApplicationContext(), R.layout.row_item, basket);
         itemAdapter.setNotifyOnChange(true);
         list.setAdapter(itemAdapter);
 
-        if(state) {
+        if(state==1) {
             appDatabase.child(LISTS).child(uid).child(listName).push().setValue("-1");
         }
 
@@ -127,6 +140,7 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
         });
 
     }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
