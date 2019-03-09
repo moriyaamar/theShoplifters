@@ -65,7 +65,7 @@ public class FragNewListNameDialog extends DialogFragment {
                     }
                 });
 
-        View view=getActivity().getLayoutInflater().inflate(R.layout.frag_insert_list_name,null);
+        View view=getActivity().getLayoutInflater().inflate(R.layout.frag_insert_list_name_dialog,null);
         builder.setView(view);
 
         listNameEditText = (EditText)view.findViewById(R.id.nameEditText);

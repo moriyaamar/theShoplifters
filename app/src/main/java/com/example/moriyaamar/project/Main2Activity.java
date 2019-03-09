@@ -44,11 +44,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         newListBtn = (Button)findViewById(R.id.addListBtn);
         editListBtn = (Button)findViewById(R.id.editListBtn);
 
-/*        newListBtn.setVisibility(Button.INVISIBLE);
-        editListBtn.setVisibility(Button.INVISIBLE);
-
-        newListBtn.setVisibility(Button.VISIBLE);
-        editListBtn.setVisibility(Button.VISIBLE);*/
 
         smsFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);              //Prepare IntentFilter for the SMS BroadcastReceiver
         smsFilter.addAction(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);                     //
@@ -103,7 +98,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         state = 2;
         Intent myIntent = new Intent(Main2Activity.this, EditListActivity.class);
         myIntent.putExtra("UID", uniqueId);
-        Main2Activity.this.startActivity(myIntent);              /*Load edit list activity here*/
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Main2Activity.this.startActivity(myIntent);                                 //Load edit list activity here*/
     }
 
     @Override
@@ -114,11 +110,11 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.hasChild(name)){
                     Intent myIntent = new Intent(Main2Activity.this, NewListActivity.class);
-                    myIntent.putExtra("LIST_NAME", name);       //pass ListName
-                    myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);
-                    myIntent.putExtra("UID", uniqueId);
-                    myIntent.putExtra("STATE", state);
-                    Main2Activity.this.startActivity(myIntent);              /*Load new list activity here*/
+                    myIntent.putExtra("LIST_NAME", name);                       //pass parameters for the new activity
+                    myIntent.putExtra("FIREBASE_URL", FIREBASE_URL);            //
+                    myIntent.putExtra("UID", uniqueId);                         //
+                    myIntent.putExtra("STATE", state);                          //
+                    Main2Activity.this.startActivity(myIntent);                       //Load new list activity here*/
                 }
                 else
                     Toast.makeText(getApplicationContext(), "Another list with the same name already exists",Toast.LENGTH_LONG).show();

@@ -7,11 +7,14 @@ import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +50,8 @@ public class EditListActivity extends AppCompatActivity {
         listOfLists = new ArrayList<String>();
 
         ListView list = findViewById(R.id.listOfListsListView);
-        listAdapter = new ListAdapter(getApplicationContext(), R.layout.list_of_lists_row_item, listOfLists );
+
+        listAdapter = new ListAdapter(getApplicationContext(), R.layout.list_of_lists_row_item, listOfLists);
         listAdapter.setNotifyOnChange(true);
         list.setAdapter(listAdapter);
 
@@ -91,6 +95,7 @@ public class EditListActivity extends AppCompatActivity {
             }
         });
 
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,6 +107,7 @@ public class EditListActivity extends AppCompatActivity {
                 argsIntent.putExtra("LIST_NAME",listName);
                 EditListActivity.this.startActivity(argsIntent);
             }
+
         });
 
     }
@@ -112,16 +118,25 @@ public class EditListActivity extends AppCompatActivity {
         MenuItem plusItem = menu.findItem(R.id.plusMenuItem);
         MenuItem trashItem = menu.findItem(R.id.trashMenuItem);
         MenuItem shareItem = menu.findItem(R.id.shareMenuItem);
+        MenuItem homeItem = menu.findItem(R.id.homeMenuItem);
+        MenuItem alarmItem = menu.findItem(R.id.alarmMenuItem);
+        MenuItem editItem = menu.findItem(R.id.editMenuItem);
 
         if(currentMenu==0) {
             plusItem.setEnabled(false).setVisible(false);
             trashItem.setEnabled(false).setVisible(false);
             shareItem.setEnabled(false).setVisible(false);
+            homeItem.setEnabled(true).setVisible(true);
+            alarmItem.setEnabled(false).setVisible(false);
+            editItem.setEnabled(false).setVisible(false);
         }
         else{
             plusItem.setEnabled(false).setVisible(false);
-            trashItem.setEnabled(false).setVisible(false);
+            trashItem.setEnabled(true).setVisible(true);
             shareItem.setEnabled(true).setVisible(true);
+            homeItem.setEnabled(true).setVisible(true);
+            alarmItem.setEnabled(false).setVisible(false);
+            editItem.setEnabled(false).setVisible(false);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -142,9 +157,31 @@ public class EditListActivity extends AppCompatActivity {
                 //start a sharing option
                 sendShopListViaMessage(shopList.getListName());
                 return true;
+            case R.id.homeMenuItem:
+                finish();
+                return true;
+            case R.id.trashMenuItem:                //trash the entire list
+                removeEntireShoppingList(shopList.getListName());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void removeEntireShoppingList(String listName) {
+
+        listOfLists.remove(listName);
+        listAdapter.notifyDataSetChanged();
+
+        appDatabase.child(LISTS).child(uid).child(listName).removeValue();
+        //update database after remove
     }
 
     private void sendShopListViaMessage(String listName) {

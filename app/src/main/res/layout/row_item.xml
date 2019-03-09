@@ -21,26 +21,28 @@
             android:id="@+id/itemCheckBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="43" />
+            android:layout_weight="43"/>
 
         <TextView
             android:id="@+id/itemNameTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="20"
+            android:layout_weight="15"
             android:gravity="left|center"
             android:text="@string/item_name"
             android:textSize="60px" />
 
-        <EditText
+        <TextView
             android:id="@+id/itemAmountTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="35"
+            android:layout_weight="40"
             android:ems="10"
             android:inputType="number"
             android:text="@string/item_amount"
-            android:gravity="center"/>
+            android:gravity="left|center"
+            android:textSize="55px"/>
+
 
     </LinearLayout>
 </RelativeLayout>

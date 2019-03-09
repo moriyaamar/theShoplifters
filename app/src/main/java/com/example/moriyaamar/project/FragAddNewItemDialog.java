@@ -35,6 +35,10 @@ public class FragAddNewItemDialog extends DialogFragment {
     private EditText newItemNameEditText;
     private EditText newItemAmountEditText;
 
+    private String itemName=null;
+    private int itemAmount=0;
+    private boolean edit=false;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,6 +73,9 @@ public class FragAddNewItemDialog extends DialogFragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
+            itemName = getArguments().getString("NAME");
+            itemAmount = getArguments().getInt("AMOUNT");
         }
     }
 
@@ -122,7 +129,7 @@ public class FragAddNewItemDialog extends DialogFragment {
                         if(!(newItemNameEditText.getText().toString()).equals("")) {
                             if (!(newItemAmountEditText.getText().toString()).equals("")) {
                                 strAmount=newItemAmountEditText.getText().toString();
-                                newItemListener.onNewItemApproved(newItemNameEditText.getText().toString(), Integer.parseInt(strAmount));
+                                newItemListener.onNewItemApproved(newItemNameEditText.getText().toString(), Integer.parseInt(strAmount),edit);
                             }
                         }
                         else
@@ -140,6 +147,12 @@ public class FragAddNewItemDialog extends DialogFragment {
 
         newItemNameEditText = (EditText)view.findViewById(R.id.newItemNameEditText);
         newItemAmountEditText = (EditText)view.findViewById(R.id.newItemAmountEditText);
+
+        if(itemName!=null && itemAmount!=0){
+            newItemNameEditText.setText(itemName);
+            newItemAmountEditText.setText(Integer.toString(itemAmount));
+            edit=true;
+        }
 
         newItemNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -173,6 +186,6 @@ public class FragAddNewItemDialog extends DialogFragment {
      */
     public interface NewItemListener {
         // TODO: Update argument type and name
-        void onNewItemApproved(String itemName, int itemAmount);
+        void onNewItemApproved(String itemName, int itemAmount, boolean edit);
     }
 }
