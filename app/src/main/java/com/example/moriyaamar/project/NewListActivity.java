@@ -136,6 +136,8 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
                 return true;
             }
         });
+
+
     }
 
 
@@ -185,13 +187,8 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
                 new FragAddNewItemDialog().show(getSupportFragmentManager(),null);          //Show new item dialog
                 return true;
             case R.id.trashMenuItem:
-                String itemname = basket.get(currentPosition).getItemName();                     //delete item
-                basket.remove(currentPosition);
-                itemAdapter.notifyDataSetChanged();
-                appDatabase.child(LISTS).child(uid).child(currentList.getListName()).child(itemname).removeValue();     //remove item from database
-                currentMenu=0;                                                                                          //set the menu to basic mode
-                invalidateOptionsMenu();                                                                                //update the menu
-                Toast.makeText(getApplicationContext(), "Item was deleted successfully", Toast.LENGTH_SHORT).show();    //show deletion Toast
+                AlertDialog ad = removeItemFromList();
+                ad.show();
                return true;
             case R.id.homeMenuItem:                                                                                     //return to the first screen
                 Intent retIntent = new Intent(NewListActivity.this, Main2Activity.class);                 //which activity to load
@@ -250,16 +247,18 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
     }
 
 
-    public void removeItemFromList(){                                                       //currently not working
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle("Delete Item").setMessage("Are you sure you want to delete this item?")
+    public AlertDialog removeItemFromList(){                                                       //Dialog to make sure you want to delete the item
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewListActivity.this).setTitle("Delete Item").setMessage("Are you sure you want to delete this item?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        String itemname = basket.get(currentPosition).getItemName();                     //delete item
                         basket.remove(currentPosition);
-                        appDatabase.child(LISTS).child(uid).child(currentList.getListName()).removeValue();
-                        currentMenu=0;
-                        invalidateOptionsMenu();
-                        Toast.makeText(getApplicationContext(), "Item was deleted successfully", Toast.LENGTH_SHORT).show();
+                        itemAdapter.notifyDataSetChanged();
+                        appDatabase.child(LISTS).child(uid).child(currentList.getListName()).child(itemname).removeValue();     //remove item from database
+                        currentMenu=0;                                                                                          //set the menu to basic mode
+                        invalidateOptionsMenu();                                                                                //update the menu
+                        Toast.makeText(getApplicationContext(), "Item was deleted successfully", Toast.LENGTH_SHORT).show();    //show deletion Toast
                     }
 
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -269,6 +268,6 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
                     }
                 });        //ask if you sure you want to delete item - currently not working****
 
-        builder.create();
+        return builder.create();
     }
 }

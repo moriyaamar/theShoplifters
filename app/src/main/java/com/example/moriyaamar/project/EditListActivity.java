@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class EditListActivity extends AppCompatActivity {
+public class EditListActivity extends AppCompatActivity implements FragAddAlarmDialog.NewAlarmListener {
     private DatabaseReference appDatabase;
     private ListAdapter listAdapter;
     private ArrayList<String> listOfLists;
@@ -135,7 +135,7 @@ public class EditListActivity extends AppCompatActivity {
             trashItem.setEnabled(true).setVisible(true);
             shareItem.setEnabled(true).setVisible(true);
             homeItem.setEnabled(true).setVisible(true);
-            alarmItem.setEnabled(false).setVisible(false);
+            alarmItem.setEnabled(true).setVisible(true);
             editItem.setEnabled(false).setVisible(false);
         }
 
@@ -163,6 +163,8 @@ public class EditListActivity extends AppCompatActivity {
             case R.id.trashMenuItem:                //trash the entire list
                 removeEntireShoppingList(shopList.getListName());
                 return true;
+            case R.id.alarmMenuItem:
+                new FragAddAlarmDialog().show(getSupportFragmentManager(),null);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -228,4 +230,10 @@ public class EditListActivity extends AppCompatActivity {
         return listText;
     }
 
+    @Override
+    public void onNewAlarmApproved(String alarmDateTime) {
+        ////////////////////////////////////////////////////////////////
+        /////////////Create Service and Alarm Manager//////////////////
+        //////////////////////////////////////////////////////////////
+    }
 }
