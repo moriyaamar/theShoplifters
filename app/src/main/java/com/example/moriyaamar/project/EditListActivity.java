@@ -203,10 +203,12 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
-                    String itemName = uniqueKeySnapshot.getKey();
-                    int itemAmount = Integer.parseInt(uniqueKeySnapshot.getValue().toString());
-                    Item i = new Item(itemName, itemAmount);
-                    shopList.setItemInShoppingList(i);
+                    if(Integer.parseInt(uniqueKeySnapshot.getValue().toString())!=-1) {
+                        String itemName = uniqueKeySnapshot.getKey();
+                        int itemAmount = Integer.parseInt(uniqueKeySnapshot.getValue().toString());
+                        Item i = new Item(itemName, itemAmount);
+                        shopList.setItemInShoppingList(i);
+                    }
                 }
 
                 String textList = getListAsText(shopList);
@@ -220,7 +222,7 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
                         getApplicationContext().startActivity(messasgeIntent);
                     }catch (Exception e){
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "Whatsapp hav not been installed", Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), "Whatsapp have not been installed", Toast.LENGTH_SHORT);
                     }
                 }
             }

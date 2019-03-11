@@ -146,7 +146,6 @@ public class FragAddNewItemDialog extends DialogFragment {
         builder.setView(view);
 
         newItemNameEditText = (EditText)view.findViewById(R.id.newItemNameEditText);
-        newItemNameEditText.setEnabled(false);
         newItemAmountEditText = (EditText)view.findViewById(R.id.newItemAmountEditText);
 
         if(itemName!=null && itemAmount!=0){
@@ -154,6 +153,8 @@ public class FragAddNewItemDialog extends DialogFragment {
             newItemAmountEditText.setText(Integer.toString(itemAmount));
             edit=true;
         }
+
+        newItemNameEditText.setEnabled(!edit);
 
         newItemNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
