@@ -38,6 +38,7 @@ public class FragAddAlarmDialog extends DialogFragment {
     private Calendar calendar;
 
     private String currentDateTime;
+    private int year, day, month, hour, minute;
 
     public FragAddAlarmDialog() {
     }
@@ -113,8 +114,10 @@ public class FragAddAlarmDialog extends DialogFragment {
                             Toast.makeText(getContext(), "Alarm cancelled - no date was selected",Toast.LENGTH_SHORT).show();
                             dismiss();
                         }
-                        else
-                            newAlarmListener.onNewAlarmApproved(calendar);
+                        else {
+                            long res = calendar.getTimeInMillis();
+                            newAlarmListener.onNewAlarmApproved(calendar.getTimeInMillis());
+                        }
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -135,13 +138,19 @@ public class FragAddAlarmDialog extends DialogFragment {
                 DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                    public void onDateSet(DatePicker view, int paramYear, int monthOfYear,
                                           int dayOfMonth) {
                         // TODO Auto-generated method stub
-                        myCalendar.set(Calendar.YEAR, year);
+                        myCalendar.set(Calendar.YEAR, paramYear);
                         myCalendar.set(Calendar.MONTH, monthOfYear);
                         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        calendar.set(year,monthOfYear,dayOfMonth);
+
+                        year = paramYear;
+                        month = monthOfYear;
+                        day = dayOfMonth;
+
+                        calendar.set(year, month, day, hour, minute);
+
                         updateLabel();
                     }
 
@@ -149,29 +158,35 @@ public class FragAddAlarmDialog extends DialogFragment {
                         currentDateTime = dateTextView.getText().toString();
                         String myFormat = "dd/MM/yy";
                         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
-                        currentDateTime = sdf.format(myCalendar.getTime())+" "+ currentDateTime;
+                        currentDateTime = sdf.format(myCalendar.getTime())+"    "+ currentDateTime;
                         dateTextView.setText(currentDateTime);
                     }
 
                 };
+
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
                 final String currentDateandTime = sdf.format(new Date());
-                int year = Integer.parseInt(currentDateandTime.substring(0,4));
-                int month = Integer.parseInt(currentDateandTime.substring(4,6));
-                int day = Integer.parseInt(currentDateandTime.substring(6,8));
+                year = Integer.parseInt(currentDateandTime.substring(0,4));
+                month = Integer.parseInt(currentDateandTime.substring(4,6));
+                day = Integer.parseInt(currentDateandTime.substring(6,8));
                 DatePickerDialog dpd = new DatePickerDialog( getContext(), date, year,month,day);
                 dpd.show();
 
                 //SHOW TIME PICKER
-                int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
-                int minute = myCalendar.get(Calendar.MINUTE);
+              //  int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+               // final int minute = myCalendar.get(Calendar.MINUTE);
 
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        calendar.set(Calendar.HOUR, selectedHour);
-                        calendar.set(Calendar.MINUTE,selectedMinute);
+
+                        hour = selectedHour;
+                        minute = selectedMinute;
+
+
+                        //calendar.set(Calendar.HOUR, selectedHour);
+                        //calendar.set(Calendar.MINUTE,selectedMinute);
                         updateLabel(selectedHour, selectedMinute);
                     }
 
@@ -202,6 +217,6 @@ public class FragAddAlarmDialog extends DialogFragment {
      */
     public interface NewAlarmListener {
         // TODO: Update argument type and name
-        void onNewAlarmApproved(Calendar alarmDateTime);
+        void onNewAlarmApproved(long alarmDateTime);
     }
 }

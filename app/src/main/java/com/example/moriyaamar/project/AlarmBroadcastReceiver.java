@@ -12,6 +12,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "myChannel";
     private long timeInMillis;
@@ -69,7 +71,12 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, AlarmBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0);
-        am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+20000, pendingIntent);           //How much time until you show the alarm
+
+//        Calendar cal = Calendar.getInstance();
+//        int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
+//        cal.set(2019, 03, 11, 03, 22);
+
+        am.setExact(AlarmManager.RTC_WAKEUP, /*cal.getTimeInMillis()+offset*/ timeInMillis, pendingIntent);           //How much time until you show the alarm
     }
 
     public void cancelAlarm(Context context){
