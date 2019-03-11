@@ -261,7 +261,7 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
     }
 
     @Override
-    public void onNewAlarmApproved(long alarmDateTime) {
+    public void onNewAlarmApproved(int year, int month, int day, int hour, int minute) {
         ////////////////////////////////////////////////////////////////
         /////////////Create Service and Alarm Manager//////////////////
         //////////////////////////////////////////////////////////////
@@ -270,7 +270,11 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
         //alarm.setAlarmTime(alarmDateTime);
        // alarm.setAlarm(getApplicationContext());
         Intent alarmParams = new Intent(this, AlarmService.class);
-        alarmParams.putExtra("CAL",alarmDateTime);
+        alarmParams.putExtra("YEAR",year);
+        alarmParams.putExtra("MONTH", month);
+        alarmParams.putExtra("DAY", day);
+        alarmParams.putExtra("HOUR", hour);
+        alarmParams.putExtra("MINUTE", minute);
         startService(alarmParams);
         currentMenu=0;
         invalidateOptionsMenu();

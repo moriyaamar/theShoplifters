@@ -116,7 +116,7 @@ public class FragAddAlarmDialog extends DialogFragment {
                         }
                         else {
                             long res = calendar.getTimeInMillis();
-                            newAlarmListener.onNewAlarmApproved(calendar.getTimeInMillis());
+                            newAlarmListener.onNewAlarmApproved(year, month, day, hour, minute);
                         }
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -141,6 +141,7 @@ public class FragAddAlarmDialog extends DialogFragment {
                     public void onDateSet(DatePicker view, int paramYear, int monthOfYear,
                                           int dayOfMonth) {
                         // TODO Auto-generated method stub
+                        view.setMinDate(System.currentTimeMillis());
                         myCalendar.set(Calendar.YEAR, paramYear);
                         myCalendar.set(Calendar.MONTH, monthOfYear);
                         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -149,7 +150,7 @@ public class FragAddAlarmDialog extends DialogFragment {
                         month = monthOfYear;
                         day = dayOfMonth;
 
-                        calendar.set(year, month, day, hour, minute);
+                        //calendar.set(year, month, day, hour, minute);
 
                         updateLabel();
                     }
@@ -217,6 +218,6 @@ public class FragAddAlarmDialog extends DialogFragment {
      */
     public interface NewAlarmListener {
         // TODO: Update argument type and name
-        void onNewAlarmApproved(long alarmDateTime);
+        void onNewAlarmApproved(int year, int month, int day, int hour, int minute);
     }
 }

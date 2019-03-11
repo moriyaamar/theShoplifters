@@ -13,10 +13,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "myChannel";
-    private long timeInMillis;
+    private int year, day, month, hour, minute;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -63,8 +64,12 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     }
 
 
-    public void setAlarmTime(long time){
-        this.timeInMillis = time;
+    public void setAlarmTime(int year, int month, int day, int hour, int minute){
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.hour = hour;
+        this.minute = minute;
     }
 
     public void setAlarm(Context context) {
@@ -72,11 +77,18 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
         Intent i = new Intent(context, AlarmBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0);
 
-//        Calendar cal = Calendar.getInstance();
-//        int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
-//        cal.set(2019, 03, 11, 03, 22);
 
-        am.setExact(AlarmManager.RTC_WAKEUP, /*cal.getTimeInMillis()+offset*/ timeInMillis, pendingIntent);           //How much time until you show the alarm
+
+        Calendar calendar = Calendar.getInstance();                                 //set alarm date and time
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH,month);
+        calendar.set(Calendar.DAY_OF_MONTH,day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);           //How much time until you show the alarm
     }
 
     public void cancelAlarm(Context context){
