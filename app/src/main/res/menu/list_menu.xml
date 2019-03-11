@@ -15,7 +15,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/shareMenuItem"
-        android:title="@string/shareitem"
+        android:title="@string/share_item"
         android:icon="@drawable/ic_share_white_24dp"
         app:showAsAction="always"/>
 

@@ -8,13 +8,24 @@
     <string name="menuSettings">Settings</string>
     <string name="new_item_name">Item</string>
     <string name="new_item_amount">Amount</string>
-    <string name="shareitem">shareItem</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share_item">shareItem</string>
     <string name="title_activity_start">StartActivity</string>
     <string name="homeItem">home</string>
     <string name="alarmItem">Set Alarm</string>
+    <string name="learnText">Learn about iList</string>
+    <string name="about_string">Welcome to iList.\n
+        <br>In this app you would be able to create your personal lists.\n</br>
+        <br>There are also some nice features you can also use such as:\n</br>
+        <br>1. Share your lists via whatsapp\n</br>
+        <br>2. Receive new list by SMS and automatically save it to your lists\n</br>
+        <br>In order to do this, the message must be in the following format:\n</br>
+        <br>List *list name*\n</br>
+        <br>-ItemName1:Amount\n</br>
+        <br>-ItemName2:Amount\n</br>
+        <br>and so on\n</br>
+        <br>3. Set a reminder when do you want to use your lists\n</br>
+        <br>We hope you will enjoy using the App and wish you the best\n</br>
+    </string>
 
 
 </resources>

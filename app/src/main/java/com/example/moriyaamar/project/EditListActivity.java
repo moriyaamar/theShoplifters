@@ -1,6 +1,9 @@
 package com.example.moriyaamar.project;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.provider.Telephony;
@@ -26,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class EditListActivity extends AppCompatActivity implements FragAddAlarmDialog.NewAlarmListener {
     private DatabaseReference appDatabase;
@@ -87,9 +91,9 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
                     invalidateOptionsMenu();
                 }
                 else {
-                    view.setSelected(false);
                     currentMenu = 0;
                     invalidateOptionsMenu();
+                    view.setSelected(false);
                 }
                 return true;
             }
@@ -105,6 +109,7 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
                 argsIntent.putExtra("STATE", state);
                 argsIntent.putExtra("UID", uid);
                 argsIntent.putExtra("LIST_NAME",listName);
+                argsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 EditListActivity.this.startActivity(argsIntent);
             }
 
@@ -161,7 +166,9 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
                 finish();
                 return true;
             case R.id.trashMenuItem:                //trash the entire list
-                removeEntireShoppingList(shopList.getListName());
+                AlertDialog ad = validateListRemoval(shopList.getListName());
+                ad.show();
+               // removeEntireShoppingList(shopList.getListName());
                 return true;
             case R.id.alarmMenuItem:
                 new FragAddAlarmDialog().show(getSupportFragmentManager(),null);
@@ -183,6 +190,11 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
         listAdapter.notifyDataSetChanged();
 
         appDatabase.child(LISTS).child(uid).child(listName).removeValue();
+
+        currentMenu=0;
+        invalidateOptionsMenu();
+        Toast.makeText(getApplicationContext(), "List was deleted successfully", Toast.LENGTH_SHORT).show();    //show deletion Toast
+
         //update database after remove
     }
 
@@ -220,6 +232,24 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
         });
     }
 
+    public AlertDialog validateListRemoval(final String listName){
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditListActivity.this).setTitle("Delete List").setMessage("Are you sure you want to delete this list?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       removeEntireShoppingList(listName);
+                    }
+
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });        //ask if you sure you want to delete item - currently not working***
+
+        return builder.create();
+    }
+
 
     public String getListAsText(ShopList list){
         String listText=list.getListName()+"\n";
@@ -231,9 +261,18 @@ public class EditListActivity extends AppCompatActivity implements FragAddAlarmD
     }
 
     @Override
-    public void onNewAlarmApproved(String alarmDateTime) {
+    public void onNewAlarmApproved(Calendar alarmDateTime) {
         ////////////////////////////////////////////////////////////////
         /////////////Create Service and Alarm Manager//////////////////
         //////////////////////////////////////////////////////////////
+
+       // AlarmBroadcastReceiver alarm = new AlarmBroadcastReceiver();
+        //alarm.setAlarmTime(alarmDateTime);
+       // alarm.setAlarm(getApplicationContext());
+        Intent alarmParams = new Intent(this, AlarmService.class);
+        alarmParams.putExtra("CAL",alarmDateTime.getTimeInMillis());
+        startService(alarmParams);
+        currentMenu=0;
+        invalidateOptionsMenu();
     }
 }

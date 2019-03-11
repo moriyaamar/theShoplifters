@@ -11,6 +11,12 @@ public class MainActivity extends AppCompatActivity implements FragStartScreen.S
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState!=null){
+
+
+        }
+
         setContentView(R.layout.activity_main);
 
         FragStartScreen fragStrart = new FragStartScreen();

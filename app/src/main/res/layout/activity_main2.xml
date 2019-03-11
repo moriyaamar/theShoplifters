@@ -7,6 +7,19 @@
     tools:context=".Main2Activity"
     android:background="@drawable/background_icon">
 
+
+    <FrameLayout
+        android:id="@+id/aboutFrameLayoutContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <!-- <fragment
+            android:id="@+id/aboutFragment"
+            android:name="com.example.moriyaamar.project.FragAbout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />-->
+    </FrameLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,5 +86,19 @@
                 android:text="@string/edit_list" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/learnTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:gravity="center"
+        android:text="@string/learnText"
+        android:textColor="#0000EE"
+        android:textSize="50px"
+        android:clickable="true"/>
+
 
 </RelativeLayout>

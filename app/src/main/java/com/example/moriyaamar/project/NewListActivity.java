@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,12 +37,16 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
     private int currentMenu=0;              //0 - add item menu , 1 - trash/edit menu
     private boolean longClickIndicator=false;
     private boolean itemExists=false;
-    private ArrayList<Integer> marked;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_list);
+
+ /*       CheckBox checkBox1 = (CheckBox) findViewById(R.id.itemCheckBox);
+        boolean checked = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("itemCheckBox", false);
+        checkBox1.setChecked(checked);                      */
 
         appDatabase = FirebaseDatabase.getInstance().getReference();
         Intent mainIntent = getIntent();                                        //get all data from previous activity
@@ -61,9 +69,11 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
                     for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {     //each time list in database is being updated, read the new items and update the basket
                         String itemName = uniqueKeySnapshot.getKey();
                         int itemAmount = Integer.parseInt(uniqueKeySnapshot.getValue().toString());
-                        Item i = new Item(itemName, itemAmount);
-                        basket.add(i);                                                     //update current basket
-                        itemAdapter.notifyDataSetChanged();                                 //update the adapter and show new item in list
+                        if(itemAmount!=-1){
+                            Item i = new Item(itemName, itemAmount);
+                            basket.add(i);                                                     //update current basket
+                            itemAdapter.notifyDataSetChanged();                                 //update the adapter and show new item in list
+                        }
                     }
                 }
 
@@ -86,7 +96,7 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
         }
 
         ListView list = findViewById(R.id.basketListView);                               //get the GUI's listview
-        itemAdapter = new ItemAdapter(getApplicationContext(), R.layout.row_item, basket, uid);     //set the adapter with Context, each row's GUI, the dataset (basket), and the userID to handle the database later
+        itemAdapter = new ItemAdapter(getApplicationContext(), R.layout.row_item, basket);     //set the adapter with Context, each row's GUI, the dataset (basket), and the userID to handle the database later
         itemAdapter.setNotifyOnChange(true);                                //set Notify Changes flag to true - each time there is a change in the dataset (basket) update the GUI
         list.setAdapter(itemAdapter);                                       //set the listview's adapter to itemAdapter we just created
 
@@ -136,8 +146,6 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
                 return true;
             }
         });
-
-
     }
 
 
@@ -264,9 +272,11 @@ public class NewListActivity extends AppCompatActivity implements FragAddNewItem
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        currentMenu=0;                                                                                          //set the menu to basic mode
+                        invalidateOptionsMenu();
                         dialog.dismiss();
                     }
-                });        //ask if you sure you want to delete item - currently not working****
+                });        //ask if you sure you want to delete item - currently not working***
 
         return builder.create();
     }

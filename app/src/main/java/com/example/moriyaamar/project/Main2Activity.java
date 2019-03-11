@@ -5,17 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,21 +27,48 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Main2Activity extends AppCompatActivity implements View.OnClickListener, FragNewListNameDialog.ListNameListener, FragStartScreen.StartFragmentInteractionListener {
+public class Main2Activity extends AppCompatActivity implements View.OnClickListener, FragNewListNameDialog.ListNameListener, FragStartScreen.StartFragmentInteractionListener, FragAbout.OnFragmentInteractionListener {
     private Button newListBtn, editListBtn;
     private String uniqueId;
     private final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE=1;
     private final int MY_PERMISSIONS_REQUEST_READ_SMS=2;
+    private final int MY_PERMISSIONS_WAKE_LOCK=3;
     private DatabaseReference appDatabase;
     private static final String FIREBASE_URL = "https://ilistproject.firebaseio.com/", LISTS = "lists";     //necessary?
     private int state=1;
     private SmsBroadcastReceiver smsReceiver;
     private IntentFilter smsFilter;
+    private final String FRAG_ABOUT="FRAG_ABOUT";
+    private boolean clicked=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        TextView learnTextView = findViewById(R.id.learnTextView);
+        learnTextView.setPaintFlags(learnTextView.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+
+        learnTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!clicked) {
+                    FragAbout fragAbout = new FragAbout();
+                    FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction().
+                            add(R.id.aboutFrameLayoutContainer, fragAbout, FRAG_ABOUT).addToBackStack(null);
+                    fragTrans.commit();
+                    clicked=true;
+                }
+                else{
+                    clicked=false;
+                    FragAbout fragAbout = new FragAbout();
+                    FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
+                    fragTrans.hide(getSupportFragmentManager().findFragmentByTag(FRAG_ABOUT));
+                    fragTrans.commit();
+                }
+            }
+        });
 
         /*Show application start for 3 seconds*/
         newListBtn = (Button)findViewById(R.id.addListBtn);

@@ -34,7 +34,8 @@ public class FragAddAlarmDialog extends DialogFragment {
     private String mParam2;
 
     private NewAlarmListener newAlarmListener;
-    private TextView dateTextView, timeTextView;
+    private TextView dateTextView;
+    private Calendar calendar;
 
     private String currentDateTime;
 
@@ -103,7 +104,7 @@ public class FragAddAlarmDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //return super.onCreateDialog(savedInstanceState);
-
+        calendar = Calendar.getInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("New Item").setMessage("Add new item to your list")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -113,7 +114,7 @@ public class FragAddAlarmDialog extends DialogFragment {
                             dismiss();
                         }
                         else
-                            newAlarmListener.onNewAlarmApproved(currentDateTime);
+                            newAlarmListener.onNewAlarmApproved(calendar);
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -126,7 +127,6 @@ public class FragAddAlarmDialog extends DialogFragment {
         builder.setView(view);
 
         dateTextView = (TextView)view.findViewById(R.id.dateTextView);
-        timeTextView = (TextView)view.findViewById(R.id.dateTextView);
 
         dateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +141,7 @@ public class FragAddAlarmDialog extends DialogFragment {
                         myCalendar.set(Calendar.YEAR, year);
                         myCalendar.set(Calendar.MONTH, monthOfYear);
                         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        calendar.set(year,monthOfYear,dayOfMonth);
                         updateLabel();
                     }
 
@@ -169,6 +170,8 @@ public class FragAddAlarmDialog extends DialogFragment {
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        calendar.set(Calendar.HOUR, selectedHour);
+                        calendar.set(Calendar.MINUTE,selectedMinute);
                         updateLabel(selectedHour, selectedMinute);
                     }
 
@@ -199,6 +202,6 @@ public class FragAddAlarmDialog extends DialogFragment {
      */
     public interface NewAlarmListener {
         // TODO: Update argument type and name
-        void onNewAlarmApproved(String alarmDateTime);
+        void onNewAlarmApproved(Calendar alarmDateTime);
     }
 }

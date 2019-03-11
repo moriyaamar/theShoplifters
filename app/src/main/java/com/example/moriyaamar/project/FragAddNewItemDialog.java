@@ -146,6 +146,7 @@ public class FragAddNewItemDialog extends DialogFragment {
         builder.setView(view);
 
         newItemNameEditText = (EditText)view.findViewById(R.id.newItemNameEditText);
+        newItemNameEditText.setEnabled(false);
         newItemAmountEditText = (EditText)view.findViewById(R.id.newItemAmountEditText);
 
         if(itemName!=null && itemAmount!=0){

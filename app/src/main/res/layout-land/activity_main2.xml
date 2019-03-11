@@ -12,18 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="205dp"
         android:layout_marginLeft="70dp"
-        android:layout_marginTop="135dp"
+        android:layout_marginTop="35dp"
         android:orientation="horizontal"
         android:weightSum="2"
-        android:layout_gravity="center">
+        android:gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:weightSum="9">
+            android:weightSum="9"
+            android:layout_marginRight="20px">
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -49,7 +52,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:weightSum="9">
+            android:weightSum="9"
+            android:layout_marginRight="20px">
 
             <ImageView
                 android:id="@+id/imageView7"
@@ -70,5 +74,18 @@
                 android:text="@string/add_item" />
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/learnTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:gravity="center"
+        android:text="@string/learnText"
+        android:textColor="#0000EE"
+        android:textSize="50px"
+        android:clickable="true"/>
 
 </RelativeLayout>

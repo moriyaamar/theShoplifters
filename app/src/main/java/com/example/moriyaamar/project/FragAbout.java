@@ -1,10 +1,8 @@
 package com.example.moriyaamar.project;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +12,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragStartScreen.StartFragmentInteractionListener} interface
+ * {@link FragAbout.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragStartScreen#newInstance} factory method to
+ * Use the {@link FragAbout#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragStartScreen extends Fragment {
+public class FragAbout extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,9 +27,9 @@ public class FragStartScreen extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private StartFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
 
-    public FragStartScreen() {
+    public FragAbout() {
         // Required empty public constructor
     }
 
@@ -41,11 +39,11 @@ public class FragStartScreen extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragStartScreen.
+     * @return A new instance of fragment FragAbout.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragStartScreen newInstance(String param1, String param2) {
-        FragStartScreen fragment = new FragStartScreen();
+    public static FragAbout newInstance(String param1, String param2) {
+        FragAbout fragment = new FragAbout();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,28 +58,13 @@ public class FragStartScreen extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        // This time is in milliseconds
-        final int SPLASH_TIME_OUT = 2000;
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(getContext(), Main2Activity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-
-                // close this activity
-                getActivity().finish();
-            }
-        }, SPLASH_TIME_OUT);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.frag_start_screen, container, false);
+        return inflater.inflate(R.layout.frag_about, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -94,8 +77,8 @@ public class FragStartScreen extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof StartFragmentInteractionListener) {
-            mListener = (StartFragmentInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -108,8 +91,6 @@ public class FragStartScreen extends Fragment {
         mListener = null;
     }
 
-
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -120,7 +101,7 @@ public class FragStartScreen extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface StartFragmentInteractionListener {
+    public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }

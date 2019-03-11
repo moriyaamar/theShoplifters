@@ -1,6 +1,7 @@
 package com.example.moriyaamar.project;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.graphics.Paint;
 import android.text.Editable;
@@ -24,21 +25,20 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
     private final Context context;
     private final ArrayList<Item> shopList;
-    private int newAmount;
-    private DatabaseReference appDatabase;
-    private String uid, listName;
-    private TextWatcher tw;
+//    private int newAmount;
+//    private DatabaseReference appDatabase;
+//    private String uid, listName;
+//    private TextWatcher tw;
 
 //    private TextView itemNameTextView;
 
 
 
-    public ItemAdapter(@NonNull Context context, int resource, ArrayList<Item> values, String userid) {
+    public ItemAdapter(@NonNull Context context, int resource, ArrayList<Item> values) {
         super(context, resource);
 
         this.context = context;
         this.shopList = values;
-        this.uid = userid;
     }
 
     @Override
@@ -58,10 +58,16 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         itemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {                      //Maybe these should be placed in "Go Shopping" activity or maybe "edit list"
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
+                if (isChecked) {
                     itemNameTextView.setPaintFlags(itemNameTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                else
+          /*          PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
+                            .putBoolean("itemCheckBox", isChecked).commit();*/
+                }
+                else {
                     itemNameTextView.setPaintFlags(itemNameTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+       /*             PreferenceManager.getDefaultSharedPreferences(getContext()).edit()
+                            .putBoolean("itemCheckBox", isChecked).commit();*/
+                }
             }
         });
 
